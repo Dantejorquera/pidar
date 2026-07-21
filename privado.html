@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Área Privada | PIDAR</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Ajustes específicos de la página privada, usando la misma línea visual de index/style.css */
+    body.private-page{
+      background:#f6f8fb;
+      color:#333;
+      min-height:100vh;
+    }
+
+.private-nav{
+    padding:26px 0;
+    background:transparent;
+    box-shadow:none;
+    transition:background .35s ease, box-shadow .35s ease, padding .35s ease;
+}
+
+.private-nav .navbar-brand img{
+    height:74px;
+    transition:height .35s ease;
+}
+
+/* Estado al bajar con scroll, igual que index */
+.private-nav.scrolled{
+    background:rgba(255,255,255,.96);
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    padding:14px 0;
+}
+
+.private-nav.scrolled .navbar-brand img{
+    height:58px;
+}
+
+
+    .private-nav .nav-link{
+      font-weight:600;
+      margin-left:20px;
+      opacity:.95;
+      position:relative;
+      cursor:pointer;
+      transition:color .35s ease, opacity .2s ease;
+    }
+
+    .private-nav .nav-link::after{
+      content:"";
+      position:absolute;
+      left:.5rem;
+      right:.5rem;
+      bottom:.15rem;
+      height:2px;
+      background:currentColor;
+      transform:scaleX(0);
+      transform-origin:center;
+      transition:transform .2s ease;
+    }
+
+    .private-nav .nav-link:hover,
+    .private-nav .nav-link.active-section{opacity:1;}
+
+    .private-nav .nav-link:hover::after,
+    .private-nav .nav-link.active-section::after{transform:scaleX(1);}
+
+    .private-hero{
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        linear-gradient(rgba(8,25,40,.55), rgba(8,25,40,.55)),
+        url("assets/img/privado.png");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      color:white;
+      text-align:center;
+      position:relative;
+    }
+
+    .private-hero .container{margin-top:80px;}
+
+    .private-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:.55rem;
+      padding:.45rem 1rem;
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:50px;
+      background:rgba(255,255,255,.12);
+      backdrop-filter:blur(10px);
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:1rem;
+    }
+
+    .private-hero h1{
+      font-size:4rem;
+      font-weight:800;
+      margin-bottom:.75rem;
+    }
+
+    .private-hero p{
+      font-size:1.4rem;
+      max-width:700px;
+      margin:0 auto 1.5rem;
+    }
+
+    .private-main{
+      padding:70px 0 100px;
+    }
+
+    .private-section-title{
+      font-size:2rem;
+      font-weight:800;
+      color:var(--primary);
+      margin-bottom:.45rem;
+    }
+
+    .private-section-subtitle{
+      color:#6b7280;
+      font-size:.98rem;
+      line-height:1.7;
+      margin-bottom:0;
+    }
+
+    .private-card{
+      background:#ffffff;
+      border-radius:18px;
+      box-shadow:0 10px 30px rgba(15, 23, 42, 0.08);
+      border:none;
+      overflow:hidden;
+    }
+
+    .private-card-header{
+      padding:2rem 2rem 1.2rem;
+      border-bottom:1px solid #eef2f7;
+    }
+
+    .private-card-body{padding:0;}
+
+    /* Calendario: referencia Google Calendar, adaptado a la paleta PIDAR */
+    .calendar-toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      padding:1.1rem 2rem;
+      background:#ffffff;
+      border-bottom:1px solid #eef2f7;
+    }
+
+    .calendar-controls{
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+    }
+
+    .calendar-month{
+      color:#1f2937;
+      font-size:1.08rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+      margin-left:.25rem;
+    }
+
+    .calendar-icon-btn,
+    .calendar-today-btn,
+    .doc-action{
+      border:1.5px solid #e5e7eb;
+      background:#ffffff;
+      color:#4b5563;
+      border-radius:50px;
+      font-weight:700;
+      min-height:40px;
+      padding:.45rem .9rem;
+      transition:all .2s ease;
+    }
+
+    .calendar-icon-btn{width:40px; padding:0; font-size:1.35rem; line-height:1;}
+
+    .calendar-icon-btn:hover,
+    .calendar-today-btn:hover,
+    .doc-action:hover{
+      border-color:#1f2937;
+      color:#1f2937;
+      transform:translateY(-2px);
+      box-shadow:0 10px 25px rgba(15,23,42,.10);
+    }
+
+    .activity-btn{
+      border:none;
+      background:var(--secondary);
+      color:white;
+      border-radius:50px;
+      padding:.75rem 1.3rem;
+      font-weight:700;
+      transition:all .25s ease;
+    }
+
+    .activity-btn:hover{
+      background:#25734a;
+      transform:translateY(-3px);
+      box-shadow:0 15px 30px rgba(46,139,87,.25);
+    }
+
+    .calendar-weekdays,
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+    }
+
+    .calendar-weekdays{
+      padding:.85rem 1.25rem;
+      color:#6b7280;
+      font-size:.75rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border-bottom:1px solid #eef2f7;
+      background:#f9fafb;
+    }
+
+    .calendar-weekdays span{text-align:center;}
+    .calendar-grid{padding:0 1.25rem 1.25rem; background:#ffffff;}
+
+    .calendar-day{
+      min-height:108px;
+      padding:.75rem .55rem;
+      border-right:1px solid #f1f5f9;
+      border-bottom:1px solid #f1f5f9;
+      background:#ffffff;
+    }
+
+    .calendar-day:nth-child(7n){border-right:none;}
+    .calendar-day.muted{background:#fbfcfd; color:#9ca3af;}
+
+    .day-number{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      font-size:.8rem;
+      font-weight:800;
+    }
+
+    .calendar-day.today .day-number{
+      background:var(--primary);
+      color:white;
+    }
+
+    .calendar-event{
+      display:block;
+      margin-top:.55rem;
+      padding:.38rem .5rem;
+      border-radius:8px;
+      font-size:.72rem;
+      font-weight:700;
+      line-height:1.25;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .event-green{background:#e7f4ec; color:var(--secondary-dark);}
+    .event-blue{background:#e8f1f8; color:var(--primary);}
+    .event-dark{background:#edf2f7; color:#1f2937;}
+    .event-mint{background:#e6fbf5; color:#087f5b;}
+
+    /* Documentación: repositorio tipo SharePoint, pero con tarjetas y sombra PIDAR */
+    .docs-toolbar{
+      padding:1.25rem 2rem;
+      border-bottom:1px solid #eef2f7;
+      background:#ffffff;
+    }
+
+    .docs-search{
+      width:100%;
+      border:1.5px solid #e5e7eb;
+      border-radius:12px;
+      padding:.75rem 1rem;
+      font-size:.95rem;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .docs-search:focus{
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(11,60,93,.10);
+    }
+
+    .doc-row{
+      display:grid;
+      grid-template-columns:44px 1fr auto;
+      gap:1rem;
+      align-items:center;
+      padding:1rem 2rem;
+      border-bottom:1px solid #f1f5f9;
+      transition:background .18s ease;
+    }
+
+    .doc-row:hover{background:#f9fafb;}
+    .doc-row:last-child{border-bottom:none;}
+
+    .doc-icon{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:.72rem;
+      font-weight:900;
+      letter-spacing:.04em;
+      background:var(--primary);
+      box-shadow:0 8px 18px rgba(11,60,93,.18);
+    }
+
+    .doc-icon.pdf{background:#b42318; box-shadow:0 8px 18px rgba(180,35,24,.18);}
+    .doc-icon.xls{background:var(--secondary); box-shadow:0 8px 18px rgba(46,139,87,.18);}
+    .doc-icon.ppt{background:#c05621; box-shadow:0 8px 18px rgba(192,86,33,.18);}
+
+    .doc-name{
+      color:#1f2937;
+      font-size:.98rem;
+      font-weight:800;
+      margin-bottom:.2rem;
+    }
+
+    .doc-meta{
+      color:#6b7280;
+      font-size:.82rem;
+      line-height:1.45;
+      margin-bottom:0;
+    }
+
+    .docs-footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      padding:1.1rem 2rem;
+      background:#f9fafb;
+      color:#6b7280;
+      font-size:.86rem;
+      font-weight:600;
+    }
+
+    .quick-stat{
+      background:#ffffff;
+      border-radius:18px;
+      box-shadow:0 10px 30px rgba(15, 23, 42, 0.08);
+      padding:1.5rem;
+      height:100%;
+      border-top:4px solid #e5e7eb;
+    }
+
+    .quick-stat strong{
+      display:block;
+      font-size:2.35rem;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-.04em;
+      color:#1f2937;
+      margin-bottom:.5rem;
+    }
+
+    .quick-stat span{
+      display:block;
+      color:#4b5563;
+      font-size:.78rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      line-height:1.5;
+    }
+
+    @media (max-width:991.98px){
+      .private-main{padding-top:45px;}
+      .calendar-grid,
+      .calendar-weekdays{grid-template-columns:repeat(7,minmax(118px,1fr)); overflow-x:auto;}
+      .calendar-toolbar{align-items:flex-start; flex-direction:column;}
+    }
+
+    @media (max-width:575.98px){
+      .private-hero h1{font-size:3rem;}
+      .private-hero p{font-size:1.05rem;}
+      .private-card-header,.calendar-toolbar,.docs-toolbar,.doc-row,.docs-footer{padding-left:1.15rem; padding-right:1.15rem;}
+      .doc-row{grid-template-columns:44px 1fr;}
+      .doc-action{grid-column:2; justify-self:start;}
+      .docs-footer{align-items:flex-start; flex-direction:column;}
+    }
+
+
+    /* Navbar privado: igual comportamiento que index */
+    #nav.private-nav:not(.scrolled){
+      background:transparent !important;
+      box-shadow:none !important;
+      padding:26px 0 !important;
+    }
+
+    #nav.private-nav.scrolled{
+      background:rgba(255,255,255,.96) !important;
+      box-shadow:0 8px 25px rgba(0,0,0,.08) !important;
+      padding:14px 0 !important;
+    }
+
+    #nav.private-nav:not(.scrolled) .nav-link,
+    #nav.private-nav:not(.scrolled) .usuario-navbar{
+      color:white !important;
+    }
+
+    #nav.private-nav.scrolled .nav-link,
+    #nav.private-nav.scrolled .usuario-navbar{
+      color:var(--primary) !important;
+    }
+
+    #nav.private-nav:not(.scrolled) .navbar-brand img{height:74px !important;}
+    #nav.private-nav.scrolled .navbar-brand img{height:58px !important;}
+  </style>
+</head>
+<body class="private-page">
+  <nav id="nav" class="navbar navbar-expand-lg fixed-top private-nav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/img/logo.png" alt="PIDAR" height="74">
+      </a>
+
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+<div class="collapse navbar-collapse" id="menu">
+    <div class="ms-auto">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#actividades">Calendario</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#documentacion">Documentación</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="logout(); return false;">Cerrar sesión</a>
+            </li>
+        </ul>
+
+        <div class="usuario-navbar">
+            Hola, <span id="nombreUsuario">cargando...</span>
+        </div>
+    </div>
+</div>
+
+  </nav>
+
+  <header class="private-hero">
+    <div class="container text-center">
+      <h1>Bienvenido a PIDAR</h1>
+      <p>Espacio de trabajo para planificación de actividades, seguimiento del calendario y documentación centralizada del programa.</p>
+    </div>
+  </header>
+
+  <main class="private-main">
+    <div class="container">
+      <div class="row g-4 mb-5">
+        <div class="col-md-4">
+          <div class="quick-stat"><strong>7</strong><span>Actividades programadas este mes</span></div>
+        </div>
+        <div class="col-md-4">
+          <div class="quick-stat"><strong>4</strong><span>Documentos recientes disponibles</span></div>
+        </div>
+        <div class="col-md-4">
+          <div class="quick-stat"><strong>100%</strong><span>Acceso privado protegido por sesión</span></div>
+        </div>
+      </div>
+
+      <section id="actividades" class="p-0 mb-5">
+        <div class="private-card">
+          <div class="private-card-header">
+            <h2 class="private-section-title">Calendario de actividades</h2>
+            <p class="private-section-subtitle">Vista mensual inspirada en la claridad de Google Calendar, adaptada al lenguaje visual de PIDAR.</p>
+          </div>
+
+          <div class="calendar-toolbar">
+            <div class="calendar-controls">
+              <button class="calendar-icon-btn" type="button" aria-label="Mes anterior">‹</button>
+              <button class="calendar-icon-btn" type="button" aria-label="Mes siguiente">›</button>
+              <button class="calendar-today-btn" type="button">Hoy</button>
+              <span class="calendar-month">Julio 2026</span>
+            </div>
+            <button class="activity-btn" type="button">Nueva actividad</button>
+          </div>
+
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+          </div>
+
+          <div class="calendar-grid" role="grid" aria-label="Calendario mensual de actividades PIDAR">
+            <div class="calendar-day muted"><span class="day-number">29</span></div>
+            <div class="calendar-day muted"><span class="day-number">30</span></div>
+            <div class="calendar-day"><span class="day-number">1</span><span class="calendar-event event-blue">Reunión de coordinación</span></div>
+            <div class="calendar-day"><span class="day-number">2</span></div>
+            <div class="calendar-day"><span class="day-number">3</span><span class="calendar-event event-green">Entrega avance</span></div>
+            <div class="calendar-day"><span class="day-number">4</span></div>
+            <div class="calendar-day"><span class="day-number">5</span></div>
+            <div class="calendar-day"><span class="day-number">6</span></div>
+            <div class="calendar-day"><span class="day-number">7</span><span class="calendar-event event-dark">Capacitación docente</span></div>
+            <div class="calendar-day"><span class="day-number">8</span></div>
+            <div class="calendar-day"><span class="day-number">9</span></div>
+            <div class="calendar-day"><span class="day-number">10</span><span class="calendar-event event-mint">Revisión documental</span></div>
+            <div class="calendar-day"><span class="day-number">11</span></div>
+            <div class="calendar-day"><span class="day-number">12</span></div>
+            <div class="calendar-day"><span class="day-number">13</span></div>
+            <div class="calendar-day"><span class="day-number">14</span></div>
+            <div class="calendar-day"><span class="day-number">15</span><span class="calendar-event event-blue">Comité PIDAR</span></div>
+            <div class="calendar-day"><span class="day-number">16</span></div>
+            <div class="calendar-day"><span class="day-number">17</span></div>
+            <div class="calendar-day"><span class="day-number">18</span></div>
+            <div class="calendar-day"><span class="day-number">19</span></div>
+            <div class="calendar-day today"><span class="day-number">20</span><span class="calendar-event event-green">Seguimiento mensual</span></div>
+            <div class="calendar-day"><span class="day-number">21</span></div>
+            <div class="calendar-day"><span class="day-number">22</span></div>
+            <div class="calendar-day"><span class="day-number">23</span><span class="calendar-event event-dark">Taller operativo</span></div>
+            <div class="calendar-day"><span class="day-number">24</span></div>
+            <div class="calendar-day"><span class="day-number">25</span></div>
+            <div class="calendar-day"><span class="day-number">26</span></div>
+            <div class="calendar-day"><span class="day-number">27</span></div>
+            <div class="calendar-day"><span class="day-number">28</span></div>
+            <div class="calendar-day"><span class="day-number">29</span><span class="calendar-event event-mint">Cierre mensual</span></div>
+            <div class="calendar-day"><span class="day-number">30</span></div>
+            <div class="calendar-day"><span class="day-number">31</span></div>
+            <div class="calendar-day muted"><span class="day-number">1</span></div>
+            <div class="calendar-day muted"><span class="day-number">2</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="documentacion" class="p-0">
+        <div class="private-card">
+          <div class="private-card-header">
+            <h2 class="private-section-title">Documentación</h2>
+            <p class="private-section-subtitle">Biblioteca privada con estructura de repositorio: documentos, matrices y presentaciones del programa.</p>
+          </div>
+
+          <div class="docs-toolbar">
+            <input class="docs-search" type="search" placeholder="Buscar documentos, carpetas o responsables" aria-label="Buscar documentación">
+          </div>
+
+          <div class="doc-list" aria-label="Repositorio de documentación PIDAR">
+            <div class="doc-row">
+              <div class="doc-icon">DOC</div>
+              <div>
+                <p class="doc-name">Manual operativo PIDAR</p>
+                <p class="doc-meta">Word · Actualizado hace 2 días · Dirección técnica</p>
+              </div>
+              <button class="doc-action" type="button">Abrir</button>
+            </div>
+            <div class="doc-row">
+              <div class="doc-icon pdf">PDF</div>
+              <div>
+                <p class="doc-name">Lineamientos y políticas</p>
+                <p class="doc-meta">PDF · Versión vigente · Jurídica</p>
+              </div>
+              <button class="doc-action" type="button">Abrir</button>
+            </div>
+            <div class="doc-row">
+              <div class="doc-icon xls">XLS</div>
+              <div>
+                <p class="doc-name">Matriz de seguimiento</p>
+                <p class="doc-meta">Excel · Compartido con el equipo · PMO</p>
+              </div>
+              <button class="doc-action" type="button">Abrir</button>
+            </div>
+            <div class="doc-row">
+              <div class="doc-icon ppt">PPT</div>
+              <div>
+                <p class="doc-name">Presentación institucional</p>
+                <p class="doc-meta">PowerPoint · Plantilla oficial · Comunicaciones</p>
+              </div>
+              <button class="doc-action" type="button">Abrir</button>
+            </div>
+          </div>
+
+          <div class="docs-footer">
+            <span>4 elementos visibles · Repositorio PIDAR</span>
+            <button class="doc-action" type="button">Ver biblioteca completa</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    verificarSesion();
+
+    async function cargarNombreUsuario() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+
+      if (error || !user) {
+        console.error("No se pudo obtener el usuario:", error);
+        return;
+      }
+
+      const nombre =
+        user.user_metadata?.nombre ||
+        user.user_metadata?.name ||
+        user.email;
+
+      const nombreUsuario = document.getElementById("nombreUsuario");
+      if (nombreUsuario) {
+        nombreUsuario.textContent = nombre;
+      }
+    }
+
+    cargarNombreUsuario();
+
+    (function () {
+      const nav = document.getElementById("nav");
+
+      function updateNavShadow() {
+        if (!nav) return;
+        nav.classList.toggle("scrolled", window.scrollY > 10);
+      }
+
+      window.addEventListener("scroll", updateNavShadow, { passive: true });
+      window.addEventListener("load", updateNavShadow);
+      updateNavShadow();
+
+      const links = Array.from(
+        document.querySelectorAll('#nav .nav-link[href^="#"]')
+      ).filter(link => link.getAttribute("href") !== "#");
+
+      const sections = links
+        .map(link => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      function setActive(id) {
+        links.forEach(link => {
+          link.classList.toggle(
+            "active-section",
+            link.getAttribute("href") === "#" + id
+          );
+        });
+      }
+
+      if ("IntersectionObserver" in window && sections.length) {
+        const observer = new IntersectionObserver((entries) => {
+          const visible = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+          if (visible) {
+            setActive(visible.target.id);
+          }
+        }, {
+          root: null,
+          rootMargin: "-35% 0px -50% 0px",
+          threshold: [0.15, 0.35, 0.6]
+        });
+
+        sections.forEach(section => observer.observe(section));
+      }
+    })();
+  </script>
+
+</body>
+</html>
+
+
+
+

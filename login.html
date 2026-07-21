@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Área Privada - PIDAR</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="overlay"></div>
+
+    <div class="login-card">
+
+        <img src="assets/img/logo.png" class="login-logo">
+
+        <h2>Área Privada</h2>
+
+        <p>
+            Accede al contenido exclusivo para deportistas,
+            familias y establecimientos.
+        </p>
+
+        <input
+            id="email"
+            type="email"
+            placeholder="Correo electrónico">
+
+        <input
+            id="password"
+            type="password"
+            placeholder="Contraseña">
+
+        <button onclick="ingresar()">
+
+            Ingresar
+
+        </button>
+
+        <a href="index.html" class="volver">
+
+            ← Volver al sitio
+
+        </a>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/auth.js"></script>
+
+<script>
+
+function ingresar(){
+
+    login(
+
+        document.getElementById("email").value,
+
+        document.getElementById("password").value
+
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>
